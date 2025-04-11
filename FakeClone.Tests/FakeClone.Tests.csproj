@@ -12,6 +12,7 @@
     </ItemGroup>
 
     <ItemGroup>
+      <PackageReference Include="FakeClone" Version="1.0.0" />
       <PackageReference Include="Microsoft.Extensions.Hosting" Version="9.0.4" />
       <PackageReference Include="Microsoft.Extensions.Hosting.Abstractions" Version="9.0.4" />
       <PackageReference Include="Microsoft.Extensions.Http" Version="9.0.4" />

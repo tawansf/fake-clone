@@ -14,7 +14,7 @@ var builder = Host.CreateDefaultBuilder(args)
     .ConfigureServices((context, services) =>
     {
         var configuration = context.Configuration;
-        var apiKey = configuration["DeepSeek:ApiKey"];
+        var apiKey = configuration["OpenRouter:ApiKey"];
 
         services.AddHttpClient();
 
@@ -22,7 +22,7 @@ var builder = Host.CreateDefaultBuilder(args)
         {
             var factory = provider.GetRequiredService<IHttpClientFactory>();
             var client = factory.CreateClient();
-            return new DeepSeekAiProvider(client, apiKey!);
+            return new MistralAiProvider(client, apiKey!);
         });
 
         services.AddScoped<ISeedGenerator, SeedGenerator>();
@@ -36,7 +36,7 @@ var seedGenerator = scope.ServiceProvider.GetRequiredService<ISeedGenerator>();
 
 var result = await seedGenerator.GenerateAsync<User>(new SeedRequest
 {
-    Prompt = "Gere 1 usuário fictício com nome e e-mail"
+    Prompt = "Gere 10 usuários fictícios com nome e e-mail, senha genero e data de aniversario"
 });
 
 foreach (var user in result)
@@ -47,4 +47,7 @@ public class User
 {
     public string Name { get; set; } = default!;
     public string Email { get; set; } = default!;
+    public string Password { get; set; } = default!;
+    public string Gender { get; set; } = default!;
+    public DateTime Birthday { get; set; } = default!;
 }

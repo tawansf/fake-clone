@@ -4,3 +4,4 @@ obj/
 riderModule.iml
 /_ReSharper.Caches/
 FakeClone.Tests/appsettings.json
+appsettings.json

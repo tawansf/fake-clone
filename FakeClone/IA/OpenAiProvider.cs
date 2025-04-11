@@ -10,13 +10,23 @@ using FakeClone.Models;
 
 namespace FakeClone.IA;
 
-public class OpenAiProvider(HttpClient httpClient, string apiKey): IAiProvider 
+/// <summary>
+/// Implementação do modelo de IA via OpenAI (GPT-4).
+/// Responsável por enviar prompts e retornar respostas em formato JSON.
+/// </summary>
+/// <param name="httpClient">Instância de HttpClient usada para realizar requisições HTTP.</param>
+/// <param name="apiKey">Chave de API usada para autenticação com o serviço OpenAI.</param>
+internal class OpenAiProvider(HttpClient httpClient, string apiKey): IAiProvider 
 {
     private static readonly JsonSerializerOptions JsonOptions = new()
     {
         PropertyNameCaseInsensitive = true
     };
-
+    /// <summary>
+    /// Envia um prompt para a API do OpenAI (GPT-4) e retorna a resposta gerada em formato JSON.
+    /// </summary>
+    /// <param name="prompt">Comando enviado pelo usuário para gerar a resposta.</param>
+    /// <returns>Resposta da IA como uma string JSON.</returns>
     public async Task<string> GenerateJsonAsync(string prompt)
     {
         try

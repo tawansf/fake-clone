@@ -10,13 +10,24 @@ using FakeClone.Models;
 
 namespace FakeClone.IA;
 
-public class OpenRouterAiProvider(HttpClient httpClient, string apiKey) : IAiProvider
+/// <summary>
+/// Implementação do modelo de IA via API OpenRouter.
+/// Responsável por enviar prompts e receber respostas em formato JSON.
+/// </summary>
+/// <param name="httpClient">Instância de HttpClient utilizada para realizar requisições HTTP.</param>
+/// <param name="apiKey">Chave de API utilizada para autenticação com o serviço do OpenRouter.</param>
+public class LlamaMaverickAiProvider(HttpClient httpClient, string apiKey) : IAiProvider
 {
     private static readonly JsonSerializerOptions JsonOptions = new()
     {
         PropertyNameCaseInsensitive = true
     };
     
+    /// <summary>
+    /// Envia um prompt para o modelo LLaMA via OpenRouter e retorna a resposta gerada em formato JSON.
+    /// </summary>
+    /// <param name="prompt">Comando que será enviado para a IA.</param>
+    /// <returns>Resposta da IA como uma string JSON.</returns>
     public async Task<string> GenerateJsonAsync(string prompt)
     {
         try
