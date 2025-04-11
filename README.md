@@ -3,7 +3,7 @@
 FakeClone é uma biblioteca .NET que usa IA para gerar dados fake de forma automática a partir de um modelo que o usuário poderá escolher e uma descrição com a solicitação dos campos a gerar. Ideal para popular banco de dados com seeds para testes em desenvolvimento.
 
 ## 🚀 Instalação
-
+- [Nuget](https://www.nuget.org/packages/FakeClone/1.0.0)
 ```csharp
 dotnet add package FakeClone
 ```
