@@ -1,43 +1,33 @@
 using System;
-using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
 using FakeClone.Interfaces;
-using FakeClone.Models;
 
 namespace FakeClone.IA;
 
-public class OpenRouterAiProvider(HttpClient httpClient, string apiKey) : IAiProvider
+public class HuggingFaceAiProvider(HttpClient httpClient, string apiKey) : IAiProvider
 {
     private static readonly JsonSerializerOptions JsonOptions = new()
     {
         PropertyNameCaseInsensitive = true
     };
-    
+
+    private const string DefaultModel = "google/gemma-7b";
+
     public async Task<string> GenerateJsonAsync(string prompt)
     {
         try
         {
-            var request = new HttpRequestMessage(HttpMethod.Post, "https://openrouter.ai/api/v1/chat/completions");
+            var request = new HttpRequestMessage(HttpMethod.Post, $"https://api-inference.huggingface.co/models/{DefaultModel}");
 
             request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", apiKey);
-            request.Headers.Add("HTTP-Referer", "https://github.com/tawansf/fake-clone");
-            request.Headers.Add("X-Title", "FakeClone Seed Generator");
 
             var requestBody = new
             {
-                model = "meta-llama/llama-4-maverick:free",
-                messages = new[]
-                {
-                    new
-                    {
-                        role = "user", 
-                        content = prompt
-                    }
-                }
+                inputs = prompt
             };
 
             var jsonBody = JsonSerializer.Serialize(requestBody);
@@ -48,9 +38,10 @@ public class OpenRouterAiProvider(HttpClient httpClient, string apiKey) : IAiPro
 
             var resultString = await response.Content.ReadAsStringAsync();
 
-            var aiResponse = JsonSerializer.Deserialize<AiResponse>(resultString, JsonOptions);
+            using var doc = JsonDocument.Parse(resultString);
+            var content = doc.RootElement[0].GetProperty("generated_text").GetString();
 
-            return aiResponse?.Choices.FirstOrDefault()?.Message?.Content ?? "[]";
+            return content ?? "[]";
         }
         catch (Exception e)
         {

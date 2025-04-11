@@ -1,25 +1,34 @@
-﻿using System.Net.Http.Headers;
-using FakeClone.Core;
+﻿using FakeClone.Core;
 using FakeClone.IA;
 using FakeClone.Interfaces;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 
 
-var host = Host.CreateDefaultBuilder()
-    .ConfigureServices(services =>
+var builder = Host.CreateDefaultBuilder(args)
+    .ConfigureAppConfiguration((context, config) =>
     {
+        config.AddJsonFile("appsettings.json", optional: false, reloadOnChange: true);
+    })
+    .ConfigureServices((context, services) =>
+    {
+        var configuration = context.Configuration;
+        var apiKey = configuration["HugFace:ApiKey"];
+
         services.AddHttpClient();
-        services.AddScoped<IAiProvider, OpenRouterAiProvider>();
-        services.AddScoped<ISeedGenerator, SeedGenerator>();
-        services.AddTransient<OpenRouterAiProvider>(provider =>
+
+        services.AddScoped<IAiProvider>(provider =>
         {
             var factory = provider.GetRequiredService<IHttpClientFactory>();
             var client = factory.CreateClient();
-            return new OpenRouterAiProvider(client);
+            return new HuggingFaceAiProvider(client, apiKey!);
         });
-    })
-    .Build();
+
+        services.AddScoped<ISeedGenerator, SeedGenerator>();
+    });
+
+var host = builder.Build();
 
 using var scope = host.Services.CreateScope();
 
