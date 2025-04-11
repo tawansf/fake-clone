@@ -14,7 +14,7 @@ var builder = Host.CreateDefaultBuilder(args)
     .ConfigureServices((context, services) =>
     {
         var configuration = context.Configuration;
-        var apiKey = configuration["HugFace:ApiKey"];
+        var apiKey = configuration["DeepSeek:ApiKey"];
 
         services.AddHttpClient();
 
@@ -22,7 +22,7 @@ var builder = Host.CreateDefaultBuilder(args)
         {
             var factory = provider.GetRequiredService<IHttpClientFactory>();
             var client = factory.CreateClient();
-            return new HuggingFaceAiProvider(client, apiKey!);
+            return new DeepSeekAiProvider(client, apiKey!);
         });
 
         services.AddScoped<ISeedGenerator, SeedGenerator>();
