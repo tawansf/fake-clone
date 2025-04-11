@@ -32,13 +32,14 @@ var request = new SeedRequest
 {
     Prompt = "Gere 10 usuários fictícios com nome, e-mail, senha, gênero e data de aniversário"
 };
+
+var users = await seedGenerator.GenerateAsync<User>(request);
+
 ```
 #### **(Opcional) Salve os dados no banco de dados:**
 
 ```csharp
 // Em breve será implementado o suporte nativo à persistência via DbContext.
-
-// Exemplo:
 context.Users.AddRange(users);
 await context.SaveChangesAsync();
 ```
