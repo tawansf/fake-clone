@@ -7,7 +7,6 @@ using System.Text.Json;
 using System.Threading.Tasks;
 using FakeClone.Interfaces;
 using FakeClone.Models;
-using Microsoft.Extensions.Logging;
 
 namespace FakeClone.IA;
 

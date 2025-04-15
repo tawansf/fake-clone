@@ -1,5 +1,4 @@
 ﻿using FakeClone.Core;
-using FakeClone.IA;
 using FakeClone.Interfaces;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -22,7 +21,7 @@ var builder = Host.CreateDefaultBuilder(args)
         {
             var factory = provider.GetRequiredService<IHttpClientFactory>();
             var client = factory.CreateClient();
-            return new MistralAiProvider(client, apiKey!);
+            return new FakeClone.IA.MistralAiProvider(client, apiKey);
         });
 
         services.AddScoped<ISeedGenerator, SeedGenerator>();
@@ -34,14 +33,14 @@ using var scope = host.Services.CreateScope();
 
 var seedGenerator = scope.ServiceProvider.GetRequiredService<ISeedGenerator>();
 
-var result = await seedGenerator.GenerateAsync<User>(new SeedRequest
+var result = await seedGenerator.GenerateAsync<MelhoresFilmesImdb>(new SeedRequest
 {
-    Prompt = "Gere 10 usuários fictícios com nome e e-mail, senha genero e data de aniversario"
+    Prompt = "Faça uma lista de 5 filmes da disney, e retorne apenas o nome dele no formato JSON"
 });
 
 foreach (var user in result)
 {
-    Console.WriteLine($"{user.Name} - {user.Email}");
+    Console.WriteLine($"{user.NomeFilme} - {user.NomeFilme}");
 }
 public class User
 {
@@ -50,4 +49,15 @@ public class User
     public string Password { get; set; } = default!;
     public string Gender { get; set; } = default!;
     public DateTime Birthday { get; set; } = default!;
+}
+
+public class EstadosBrasileiros
+{
+    public string NomeCompleto { get; set; } = default!;
+    public string Sigla { get; set; } = default!;
+}
+
+public class MelhoresFilmesImdb
+{
+    public string NomeFilme { get; set; } = default!;
 }
